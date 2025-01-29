@@ -19,10 +19,11 @@ RACE_TARGETS := $(patsubst cmd/%/main.go,%.race,$(CMD_SOURCES))
 PANDOC_BIN := $(shell if which pandoc >/dev/null 2>&1; then echo pandoc; else echo true; fi)
 
 $(TARGETS):
-	go build -v -i -ldflags "$(LDFLAGS)" -o $@ ./cmd/$@
+	go env -w GO111MODULE=auto
+	go build -v -ldflags "$(LDFLAGS)" -o $@ ./cmd/$@
 
 $(RACE_TARGETS):
-	go build -v -i -ldflags "$(LDFLAGS)" --race -o $@ ./cmd/$(basename $@)
+	go build -v -ldflags "$(LDFLAGS)" --race -o $@ ./cmd/$(basename $@)
 
 # build tasks
 rpm: docker-rpm
